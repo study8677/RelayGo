@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="RelayGo，透明的 AI 中转站费率、模型与服务对比平台。" />
+    <title>RelayGo · AI 中转站透明指南</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="#">Relay<span>Go</span><i></i></a>
+      <nav aria-label="主导航">
+        <a class="active" href="#stations">中转站</a>
+        <a href="#models">模型库</a>
+        <a href="#benchmark">评测</a>
+        <a href="#business">企业服务</a>
+      </nav>
+      <button class="ghost-button" id="submitStation">提交站点 <span>↗</span></button>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="hero-glow"></div>
+        <div class="eyebrow"><span></span> AI API 中转站透明指南</div>
+        <h1>找到更适合你的<br /><em>AI 中转站</em></h1>
+        <p>聚合费率、模型、稳定性与企业服务。每一条数据都标注来源，每一次选择都有据可查。</p>
+        <label class="search-box">
+          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m21 21-4.3-4.3m2.3-5.2A7.5 7.5 0 1 1 4 11.5a7.5 7.5 0 0 1 15 0Z"/></svg>
+          <input id="search" type="search" placeholder="搜索中转站或模型，如 Claude Sonnet 4" autocomplete="off" />
+          <kbd>⌘ K</kbd>
+        </label>
+        <div class="quick-links"><span>热门搜索</span><button data-query="Claude">Claude</button><button data-query="GPT">GPT</button><button data-query="Gemini">Gemini</button><button data-query="DeepSeek">DeepSeek</button></div>
+      </section>
+
+      <section class="stats" aria-label="平台数据">
+        <article><strong>128</strong><span>收录中转站</span><small>本周 +6</small></article>
+        <article><strong>76</strong><span>标准化模型</span><small>覆盖 12 家厂商</small></article>
+        <article><strong>96.8<sup>%</sup></strong><span>费率信息覆盖</span><small>持续更新</small></article>
+        <article><strong>24h</strong><span>数据更新周期</span><small>来源可追溯</small></article>
+      </section>
+
+      <section class="directory" id="stations">
+        <div class="section-heading">
+          <div><span class="section-index">01 / DIRECTORY</span><h2>中转站目录</h2><p>用同一个尺度，比较每一种选择。</p></div>
+          <div class="view-actions"><span id="resultCount">0 个结果</span><button id="clearFilters">清除筛选</button></div>
+        </div>
+
+        <div class="layout">
+          <aside class="filters" aria-label="筛选条件">
+            <div class="filter-title"><strong>筛选条件</strong><span>FILTER</span></div>
+            <fieldset><legend>模型支持</legend><label><input type="checkbox" name="model" value="Claude" /> Claude</label><label><input type="checkbox" name="model" value="GPT" /> GPT</label><label><input type="checkbox" name="model" value="Gemini" /> Gemini</label><label><input type="checkbox" name="model" value="DeepSeek" /> DeepSeek</label></fieldset>
+            <fieldset><legend>企业服务</legend><label><input type="checkbox" id="invoice" /> 支持开发票</label><label><input type="checkbox" id="specialInvoice" /> 支持专票</label><label><input type="checkbox" id="corporate" /> 支持对公转账</label><label><input type="checkbox" id="contract" /> 支持签合同</label></fieldset>
+            <fieldset><legend>站点状态</legend><label><input type="checkbox" id="available" /> 当前可用</label><label><input type="checkbox" id="claimed" /> 已认领</label></fieldset>
+          </aside>
+
+          <div class="results">
+            <div class="result-toolbar">
+              <div class="filter-chips" id="activeFilters"></div>
+              <label>排序 <select id="sort"><option value="recommended">综合推荐</option><option value="price">最低价格</option><option value="uptime">可用率最高</option><option value="latency">延迟最低</option></select></label>
+            </div>
+            <div class="station-grid" id="stationGrid"></div>
+            <div class="empty-state" id="emptyState" hidden><span>⌁</span><h3>没有匹配的中转站</h3><p>试试减少筛选条件，或换一个模型名称。</p></div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <aside class="compare-bar" id="compareBar" aria-live="polite">
+      <div><span>对比清单</span><div id="compareNames"></div></div>
+      <button id="openCompare">开始对比 <b id="compareCount">0</b></button>
+    </aside>
+
+    <dialog id="detailDialog"><button class="dialog-close" data-close aria-label="关闭">×</button><div id="detailContent"></div></dialog>
+    <dialog id="compareDialog"><button class="dialog-close" data-close aria-label="关闭">×</button><div id="compareContent"></div></dialog>
+    <dialog id="submitDialog"><button class="dialog-close" data-close aria-label="关闭">×</button><div class="dialog-heading"><span>CONTRIBUTE</span><h2>提交一个中转站</h2><p>帮助社区补全信息。禁止提交邀请码、返利链接或优惠码。</p></div><form id="submitForm"><label>站点名称<input required name="name" placeholder="例如：示例中转站" /></label><label>官方网站<input required name="url" type="url" placeholder="https://" /></label><label>补充说明<textarea name="note" rows="4" placeholder="模型、费率或企业服务信息"></textarea></label><button class="primary-button">提交审核</button></form></dialog>
+    <div class="toast" id="toast" role="status"></div>
+    <footer><a class="brand" href="#">Relay<span>Go</span><i></i></a><p>数据仅供参考，请以中转站实际账单与服务条款为准。</p><span>© 2026 RelayGo</span></footer>
+    <script type="module" src="src/app.js"></script>
+  </body>
+</html>
